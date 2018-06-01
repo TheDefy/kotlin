@@ -16,7 +16,6 @@
 
 package org.jetbrains.kotlin.resolve.calls;
 
-import com.google.common.collect.Maps;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import kotlin.collections.CollectionsKt;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +25,6 @@ import org.jetbrains.kotlin.descriptors.*;
 import org.jetbrains.kotlin.diagnostics.Diagnostic;
 import org.jetbrains.kotlin.name.Name;
 import org.jetbrains.kotlin.psi.*;
-import org.jetbrains.kotlin.psi.psiUtil.KtPsiUtilKt;
 import org.jetbrains.kotlin.psi.psiUtil.ReservedCheckingKt;
 import org.jetbrains.kotlin.resolve.OverrideResolver;
 import org.jetbrains.kotlin.resolve.calls.callUtil.CallUtilKt;
@@ -84,7 +82,7 @@ public class ValueArgumentsToParametersMapper {
         private final Map<Name,ValueParameterDescriptor> parameterByName;
         private Map<Name,ValueParameterDescriptor> parameterByNameInOverriddenMethods;
 
-        private final Map<ValueParameterDescriptor, VarargValueArgument> varargs = Maps.newHashMap();
+        private final Map<ValueParameterDescriptor, VarargValueArgument> varargs = new HashMap<>();
         private final Set<ValueParameterDescriptor> usedParameters = new HashSet<>();
         private Status status = OK;
 
@@ -94,7 +92,7 @@ public class ValueArgumentsToParametersMapper {
             this.candidateCall = candidateCall;
             this.parameters = candidateCall.getCandidateDescriptor().getValueParameters();
 
-            this.parameterByName = Maps.newHashMap();
+            this.parameterByName = new HashMap<>();
             for (ValueParameterDescriptor valueParameter : parameters) {
                 parameterByName.put(valueParameter.getName(), valueParameter);
             }
@@ -103,7 +101,7 @@ public class ValueArgumentsToParametersMapper {
         @Nullable
         private ValueParameterDescriptor getParameterByNameInOverriddenMethods(Name name) {
             if (parameterByNameInOverriddenMethods == null) {
-                parameterByNameInOverriddenMethods = Maps.newHashMap();
+                parameterByNameInOverriddenMethods = new HashMap<>();
                 for (ValueParameterDescriptor valueParameter : parameters) {
                     for (ValueParameterDescriptor parameterDescriptor : valueParameter.getOverriddenDescriptors()) {
                         parameterByNameInOverriddenMethods.put(parameterDescriptor.getName(), valueParameter);

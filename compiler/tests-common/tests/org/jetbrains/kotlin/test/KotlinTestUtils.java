@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -847,7 +846,7 @@ public class KotlinTestUtils {
 
     @NotNull
     public static Map<String, String> parseDirectives(String expectedText) {
-        Map<String, String> directives = Maps.newHashMap();
+        Map<String, String> directives = new HashMap<>();
         Matcher directiveMatcher = DIRECTIVE_PATTERN.matcher(expectedText);
         int start = 0;
         while (directiveMatcher.find()) {
