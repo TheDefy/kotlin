@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -1183,7 +1182,7 @@ public class KotlinTestUtils {
     }
 
     private static Set<String> collectMethodsMetadata(Class<?> testCaseClass) {
-        Set<String> filePaths = Sets.newHashSet();
+        Set<String> filePaths = new HashSet<>();
         for (Method method : testCaseClass.getDeclaredMethods()) {
             String path = getMethodMetadata(method);
             if (path != null) {

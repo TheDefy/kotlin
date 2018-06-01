@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.resolve.calls;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import kotlin.collections.CollectionsKt;
 import org.jetbrains.annotations.NotNull;
@@ -35,10 +34,7 @@ import org.jetbrains.kotlin.resolve.calls.components.ArgumentsUtilsKt;
 import org.jetbrains.kotlin.resolve.calls.model.*;
 import org.jetbrains.kotlin.resolve.calls.tasks.TracingStrategy;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.jetbrains.kotlin.diagnostics.Errors.*;
 import static org.jetbrains.kotlin.diagnostics.Errors.BadNamedArgumentsTarget.*;
@@ -89,7 +85,7 @@ public class ValueArgumentsToParametersMapper {
         private Map<Name,ValueParameterDescriptor> parameterByNameInOverriddenMethods;
 
         private final Map<ValueParameterDescriptor, VarargValueArgument> varargs = Maps.newHashMap();
-        private final Set<ValueParameterDescriptor> usedParameters = Sets.newHashSet();
+        private final Set<ValueParameterDescriptor> usedParameters = new HashSet<>();
         private Status status = OK;
 
         private Processor(@NotNull Call call, @NotNull MutableResolvedCall<D> candidateCall, @NotNull TracingStrategy tracing) {

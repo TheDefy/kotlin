@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.asJava.finder;
 
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Sets;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Condition;
@@ -39,10 +38,7 @@ import org.jetbrains.kotlin.psi.KtEnumEntry;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.kotlin.resolve.jvm.KotlinFinderMarker;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.jetbrains.kotlin.asJava.LightClassUtilsKt.toLightClass;
 
@@ -140,8 +136,7 @@ public class JavaElementFinder extends PsiElementFinder implements KotlinFinderM
 
         Collection<KtClassOrObject> declarations = kotlinAsJavaSupport.findClassOrObjectDeclarationsInPackage(packageFQN, scope);
 
-        Set<String> answer = Sets.newHashSet();
-        answer.addAll(kotlinAsJavaSupport.getFacadeNames(packageFQN, scope));
+        Set<String> answer = new HashSet<>(kotlinAsJavaSupport.getFacadeNames(packageFQN, scope));
 
         for (KtClassOrObject declaration : declarations) {
             String name = declaration.getName();

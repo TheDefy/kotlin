@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.resolve;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiQualifiedNamedElement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -38,10 +37,7 @@ import org.jetbrains.kotlin.types.ErrorUtils;
 import org.jetbrains.kotlin.types.KotlinType;
 import org.jetbrains.kotlin.types.TypeConstructor;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -141,7 +137,7 @@ public abstract class ExpectedResolveData {
     }
 
     public final void checkResult(BindingContext bindingContext) {
-        Set<PsiElement> unresolvedReferences = Sets.newHashSet();
+        Set<PsiElement> unresolvedReferences = new HashSet<>();
         for (Diagnostic diagnostic : bindingContext.getDiagnostics()) {
             if (Errors.UNRESOLVED_REFERENCE_DIAGNOSTICS.contains(diagnostic.getFactory())) {
                 unresolvedReferences.add(diagnostic.getPsiElement());
