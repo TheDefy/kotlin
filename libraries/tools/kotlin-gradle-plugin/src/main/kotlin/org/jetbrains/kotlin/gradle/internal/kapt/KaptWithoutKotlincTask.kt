@@ -5,9 +5,11 @@
 
 package org.jetbrains.kotlin.gradle.internal
 
+import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.*
 import org.gradle.workers.IsolationMode
 import org.gradle.workers.WorkerExecutor
+import org.jetbrains.kotlin.gradle.internal.Kapt3KotlinGradleSubplugin.Companion.KAPT_WORKER_DEPENDENCIES_CONFIGURATION_NAME
 import org.jetbrains.kotlin.gradle.tasks.clearOutputDirectories
 import org.jetbrains.kotlin.gradle.tasks.findKotlinStdlibClasspath
 import org.jetbrains.kotlin.gradle.tasks.findToolsJar
@@ -19,7 +21,9 @@ import javax.inject.Inject
 open class KaptWithoutKotlincTask @Inject constructor(private val workerExecutor: WorkerExecutor) : KaptTask() {
     @get:InputFiles
     @get:Classpath
-    lateinit var annotationProcessingJars: List<File>
+    @Suppress("unused")
+    val kaptJars: Collection<File>
+        get() = project.configurations.getByName(KAPT_WORKER_DEPENDENCIES_CONFIGURATION_NAME).resolve()
 
     @get:InputFile
     @get:PathSensitive(PathSensitivity.RELATIVE)
@@ -64,7 +68,7 @@ open class KaptWithoutKotlincTask @Inject constructor(private val workerExecutor
             javacOptions
         )
 
-        val kaptClasspath = annotationProcessingJars + findKotlinStdlibClasspath(project)
+        val kaptClasspath = kaptJars + findKotlinStdlibClasspath(project)
 
         workerExecutor.submit(KaptExecution::class.java) { config ->
             config.isolationMode = IsolationMode.PROCESS

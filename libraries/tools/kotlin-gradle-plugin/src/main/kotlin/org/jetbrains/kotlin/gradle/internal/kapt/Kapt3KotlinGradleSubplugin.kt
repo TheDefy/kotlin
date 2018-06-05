@@ -74,6 +74,8 @@ class Kapt3KotlinGradleSubplugin : KotlinGradleSubplugin<KotlinCompile> {
         private val VERBOSE_OPTION_NAME = "kapt.verbose"
         private val USE_WORKER_API = "kapt.use.worker.api"
 
+        const val KAPT_WORKER_DEPENDENCIES_CONFIGURATION_NAME = "kotlinKaptWorkerDependencies"
+
         private val KAPT_KOTLIN_GENERATED = "kapt.kotlin.generated"
 
         val MAIN_KAPT_CONFIGURATION_NAME = "kapt"
@@ -357,8 +359,14 @@ class Kapt3KotlinGradleSubplugin : KotlinGradleSubplugin<KotlinCompile> {
         }
 
         if (kaptTask is KaptWithoutKotlincTask) {
+            project.configurations.create(KAPT_WORKER_DEPENDENCIES_CONFIGURATION_NAME).apply {
+                project.getKotlinPluginVersion()?.let { kotlinPluginVersion ->
+                    val kaptDependency = getPluginArtifact().run { "$groupId:$artifactId:$kotlinPluginVersion" }
+                    dependencies.add(project.dependencies.create(kaptDependency))
+                } ?: project.logger.error("Kotlin plugin should be enabled before 'kotlin-kapt'")
+            }
+
             with(kaptTask) {
-                annotationProcessingJars = this@createKaptKotlinTask.kaptClasspathArtifacts
                 projectDir = project.projectDir
 
                 isVerbose = project.isKaptVerbose()
